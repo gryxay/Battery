@@ -1,0 +1,74 @@
+#parent {
+    width: 70%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+#mainContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+#carousel {
+    width: 35vw;
+    margin: auto;
+    display: inline-flex;
+}
+
+#carousel img {
+    max-height: 50vh;
+    object-fit: cover;
+}
+
+#new {
+    width: 45%;
+    display: inline-flex;
+    flex-direction: column;
+    border: 1px solid var(--light-grey);
+    border-radius: 2px;
+    padding: 1.5%;
+    gap: 10px;
+}
+
+#new h2 {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#popular {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5vh;
+    gap: 10px;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.carousel {
+    margin: auto !important;
+}
+
+@media screen and (max-width: 1200px) {
+    #mainContainer {
+        flex-direction: column;
+    }
+
+    #new {
+        width: 100%;
+    }
+
+    #carousel {
+        width: 55vw;
+        display: inline-flex;
+    }
+    
+    #carousel img {
+        height: 50vh;
+        object-fit: cover;
+    }
+}

@@ -1,0 +1,45 @@
+#listingAlternate {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    height: fit-content;
+    border: 2px solid var(--light-grey);
+    border-radius: 5px;
+    align-items: center;
+}
+
+#listingAlternate img {
+    height: 20vh;
+    object-fit: cover;
+}
+
+#listingContainerAlt {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+#listingContainerAlt h6 {
+    width: min-content;
+    color: var(--dark-grey);
+    font-weight: 300;
+}
+
+#listingCart {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    text-align: end;
+    justify-items: end;
+    width: 20%;
+    justify-content: space-around;
+}
+
+#listingCart h4 {
+    width: min-content;
+    margin-left: auto;
+}
+
+hr {
+    width: 80%;
+}

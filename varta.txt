@@ -1,0 +1,34 @@
+main:
+header dropdown menu
+new
+footer
+search
+account
+cart
+
+
+listings:
+filters?
+categories on side
+sorting preferences
+amount of listings per page
+
+single listing:
+multiple pics
+price
+likutis?
+amount
+bottom page techincal shit
+
+
+cart:
+floating and seperate cart
+remove item
+total
+
+
+how many items total
+what categories
+what filters
+what specifics
+give me pics

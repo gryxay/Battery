@@ -1,0 +1,43 @@
+#header {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin: auto;
+    padding: 2vw;
+}
+
+#header img {
+    width: 20%;
+    object-fit: contain;
+}
+
+#input {
+    width: 30%;
+    display: flex;
+    overflow: hidden;
+}
+
+#input input {
+    width: 105%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    border: 1px solid #d3d3d3;
+}
+
+#input button {
+    padding: 10px;
+    background-color: #f3cb14;
+    border: none;
+    transition: background-color 500ms;
+}
+
+#input button:hover {
+    background-color: #f7db5b;
+    cursor: pointer;
+}
+
+#cart {
+    margin-right: 2vw;
+}

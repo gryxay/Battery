@@ -1,0 +1,17 @@
+.navbar,
+.navbar-default {
+    background-image: linear-gradient(to bottom, var(--varta-blue) 0, var(--varta-blue) 100%) !important; /* override background image gradient w/ flat color */
+}
+
+.navbar-nav {
+    color: var(--white);
+}
+
+#dropdown-inner {
+    color: #212529;
+    padding: 0;
+}
+
+#dropdown-inner.dropend, #dropdown-inner.show, #dropdown-inner.dropdown-item {
+    padding: 0.25rem, 1rem;
+}
