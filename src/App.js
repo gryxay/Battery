@@ -1,22 +1,18 @@
 import './App.css';
 import './components/Colors.css';
-import Header from './components/Header';
-import Main from './components/Main';
-import Navigation from './components/Navbar';
+import Landing from './pages/Landing';
+import Listings from './pages/Listings'; // Assuming you have a Listings component
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-
-      <Header />
-      <Navigation />
-      <Main />
-      {/* 
-      <Footer>
-
-
-
-      */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/:category" element={<Listings />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
