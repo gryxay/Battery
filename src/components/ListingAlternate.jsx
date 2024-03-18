@@ -1,4 +1,4 @@
-import './ListingAlternate.css';
+import '../styles/ListingAlternate.css';
 
 const Listing = ({ name, price, code, image, alt}) => {
     return (

@@ -39,3 +39,29 @@
     width: min-content;
     margin-left: auto;
 }
+
+#filter-icon {
+    height: 3rem;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1000px) {
+    #listing img {
+        width: 5rem;
+        object-fit: cover;
+        margin-right: 1rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    #listing {
+        width: 80vw;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    #listing {
+        width: 100%;
+    }
+}

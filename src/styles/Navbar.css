@@ -3,12 +3,20 @@
     background-image: linear-gradient(to bottom, var(--varta-blue) 0, var(--varta-blue) 100%) !important; /* override background image gradient w/ flat color */
 }
 
-.navbar-nav {
-    color: var(--white);
+.navbar-nav, .nav-link, .navbar-toggler, .navbar-toggler-icon {
+    color: var(--white) !important;
+}
+
+.navbar-toggler {
+    order: 1;
+}
+
+.nav-black {
+    color: var(--dark-grey) !important;
 }
 
 #dropdown-inner {
-    color: #212529;
+    color: #212529 !important;
     padding: 0;
 }
 

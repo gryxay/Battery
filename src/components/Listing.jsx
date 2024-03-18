@@ -1,4 +1,4 @@
-import './Listing.css';
+import '../styles/Listing.css';
 import Form from 'react-bootstrap/Form';
 import { RiShoppingCart2Fill } from "react-icons/ri";
 

@@ -11,13 +11,13 @@
     flex-direction: row;
 }
 
-#carousel {
+.carousel {
     width: 35vw;
     margin: auto;
     display: inline-flex;
 }
 
-#carousel img {
+.carousel img {
     max-height: 50vh;
     object-fit: cover;
 }
@@ -62,12 +62,13 @@
         width: 100%;
     }
 
-    #carousel {
+    .carousel {
         width: 55vw;
+        height: auto;
         display: inline-flex;
     }
     
-    #carousel img {
+    .carousel img {
         height: 50vh;
         object-fit: cover;
     }

@@ -1,0 +1,27 @@
+:root {
+    --varta-blue:#0c1e8d;
+    --varta-yellow: #f8c905;
+    --white: #F1F2F6;
+    --black: #101218;
+    --dark-grey: #212531;
+    --grey: #ddd;
+    --light-grey: #F3F4F7;
+}
+
+h2 {
+    font-weight: bold !important;
+}
+  
+h2, h3, h4, h5, h5 {
+    color: var(--black) !important;
+}
+  
+h6 {
+    color: var(--dark-grey) !important;
+    opacity: 80%;
+}
+
+#footer h6 {
+    color: var(--white) !important;
+    opacity: 100% !important;
+}

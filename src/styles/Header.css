@@ -8,7 +8,7 @@
 }
 
 #header img {
-    width: 20%;
+    width: 100%;
     object-fit: contain;
 }
 
@@ -38,6 +38,22 @@
     cursor: pointer;
 }
 
-#cart {
+#headerCart {
     margin-right: 2vw;
+}
+
+#icons a {
+    color: var(--varta-blue);
+}
+
+#mobile-header-container {
+    margin-left: auto;
+    margin-right: 1rem;
+}
+
+.offcanvas-body, .offcanvas-header {
+    background-color: var(--varta-blue);
+}
+.btn-close {
+    background-color: white !important;
 }

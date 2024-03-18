@@ -1,0 +1,87 @@
+#expandedListingContainer {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+}
+
+#listingDetails {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
+
+#cartButton {
+    background-color: var(--varta-yellow);
+    border: 2px solid var(--varta-yellow);
+    margin-top: .25rem;
+    width: 100%;
+}
+
+#cartContainer {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    justify-self: flex-end;
+    align-self: flex-end;
+}
+
+#delivery, #cart {
+    align-self: flex-end;
+    background-color: var(--light-grey);
+    border-radius: 5px;
+    padding: .75rem;
+    width: 100%;
+    margin: .25rem .75rem;
+}
+
+#specifications {
+    width: 80%;
+    margin: 1rem auto;
+    display: flex;
+    box-sizing: border-box;
+    padding: 1rem;
+    border-radius: 5px;
+    flex-direction: column;
+    background-color: var(--light-grey);
+}
+
+.carouselInnerCustom {
+    width: 35vw;
+    height: 60vh;
+}
+
+.table {
+    width: 30%;
+}
+
+.table, thead, tr, th, td {
+    background-color: var(--light-grey) !important;
+}
+
+.icon {
+    margin-right: .5rem;
+}
+
+.hr-primary {
+    width: 90%;
+    margin: .5rem auto;
+}
+
+@media screen and (max-width: 1200px) {
+    #individualListingCarousel {
+        width: 80vw;
+    }
+
+    #expandedListingContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #cartContainer {
+        margin-top: 2rem;
+        width: fit-content;
+    }
+}
