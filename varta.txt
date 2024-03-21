@@ -1,7 +1,13 @@
 TO-DO:
-CRUD page
-CRUD functionality
 Acccount page
+fix float price
+categories
+category autoselect on update
+change images
+fix navbar running away
+change nauja preke to eidt
+
+
 Cart page
 
 More filters

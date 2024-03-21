@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Account from './pages/Account';
 import Cart from './pages/Cart';
 import React, { useState } from 'react';
+import Crud from './pages/Crud';
 
 function App() {
   const [showFilter, setShowFilter] = useState(false);
@@ -16,7 +17,6 @@ function App() {
   };
 
   const handleCloseFilter = () => {
-    console.log('rah')
       setShowFilter(false);
   };
 
@@ -29,6 +29,8 @@ function App() {
           <Route path="/:category/:item" element={<IndividualListing />} />
           <Route path="/account" element={<Account />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/crud" element={<Crud />} />
+          <Route path="/crud/:id" element={<Crud />} />
         </Routes>
       </BrowserRouter>
     </div>

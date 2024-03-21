@@ -1,6 +1,7 @@
 #expandedListingContainer {
     width: 80%;
     display: flex;
+    margin: 2rem auto;
     flex-direction: row;
 }
 
@@ -10,6 +11,14 @@
     text-align: left;
     padding: 2rem 1rem;
     box-sizing: border-box;
+    width: 40%;
+}
+
+#loading { 
+    height: 76vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #cartButton {
@@ -48,6 +57,17 @@
     background-color: var(--light-grey);
 }
 
+#specifications a {
+    width: min-content;
+    align-self: end;
+}
+
+#specifications-table {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .carouselInnerCustom {
     width: 35vw;
     height: 60vh;
@@ -72,7 +92,7 @@
 
 @media screen and (max-width: 1200px) {
     #individualListingCarousel {
-        width: 80vw;
+        width: 60vw;
     }
 
     #expandedListingContainer {

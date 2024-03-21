@@ -3,6 +3,10 @@
     background-image: linear-gradient(to bottom, var(--varta-blue) 0, var(--varta-blue) 100%) !important; /* override background image gradient w/ flat color */
 }
 
+.navbar-nav {
+    margin: auto;
+}
+
 .navbar-nav, .nav-link, .navbar-toggler, .navbar-toggler-icon {
     color: var(--white) !important;
 }

@@ -25,3 +25,14 @@ h6 {
     color: var(--white) !important;
     opacity: 100% !important;
 }
+
+.btn-primary {
+  --bs-btn-bg: #39A9DB !important;
+  --bs-btn-border-color: #39A9DB !important;
+  --bs-btn-hover-bg: #238DBE !important;
+  --bs-btn-hover-border-color: #238DBE !important;
+  --bs-btn-active-bg: #238DBE !important;
+  --bs-btn-active-border-color: #238DBE !important;
+  --bs-btn-disabled-bg: #39A9DB !important;
+  --bs-btn-disabled-border-color: #39A9DB !important;
+}

@@ -1,0 +1,39 @@
+#new-listing-container {
+    display: flex;
+    width: 40%;
+    margin: auto;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+#submit-button-crud {
+    margin-top: 1rem;
+    justify-self: center;
+}
+
+#new-listing-container h2 {
+    margin: 1rem auto 1.75rem auto;
+}
+
+#update-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group-crud {
+    margin: .5rem 0;
+}
+
+@media screen and (max-width: 1200px) {
+    #new-listing-container {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    #new-listing-container {
+        width: 80%;
+    }
+}

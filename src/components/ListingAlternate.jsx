@@ -1,16 +1,20 @@
+import { useEffect } from 'react';
 import '../styles/ListingAlternate.css';
 
-const Listing = ({ name, price, code, image, alt}) => {
+const Listing = ({ id, category, name, price, code, image, alt}) => {
+
     return (
-        <div id="listingAlternate">
-            <img src={image} alt={alt} />
-            <div id="listingContainerAlt">
-                <h3>{name}</h3>
-                <h6>{code}</h6>
+        <a href={`/${category}/${id}`}>
+            <div id="listingAlternate">
+                <img src={image} alt={alt} />
+                <div id="listingContainerAlt">
+                    <h3>{name}</h3>
+                    <h6>{code}</h6>
+                </div>
+                <hr/>
+                <h4>{price}€</h4>
             </div>
-            <hr/>
-            <h4>{price}€</h4>
-        </div>
+        </a>
     )
 }
 
