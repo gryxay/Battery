@@ -25,6 +25,7 @@ entities.Item.hasOne(entities.Details);
 entities.Details.belongsTo(entities.Item);
 
 // Synchronize models with the database
+
 // sequelize.sync({ force: true }).then(() => {
 //   console.log('Models synchronized with the database.');
 // }).catch(err => {

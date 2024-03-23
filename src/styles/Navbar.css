@@ -19,6 +19,10 @@
     color: var(--dark-grey) !important;
 }
 
+.dropdown-menu[data-bs-popper] {
+    margin-top: 0;
+  }
+
 #dropdown-inner {
     color: #212529 !important;
     padding: 0;

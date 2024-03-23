@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Form, Button, Container, Modal, Row, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 const NewListing = ({ id }) => {
@@ -63,6 +63,12 @@ const NewListing = ({ id }) => {
     ];
 
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
+    const [additionalImages, setAdditionalImages] = useState([]);
+    const [imagesToDelete, setImagesToDelete] = useState([])
+
+    const openModal = () => setShowModal(true);
+    const closeModal = () => setShowModal(false);
 
     const [formData, setFormData] = useState({
         category: '',
@@ -80,6 +86,27 @@ const NewListing = ({ id }) => {
         }
     });
 
+    const handleOk = () => {
+        setFormData({ ...formData, images: [...formData.images] });
+        setShowModal(false);
+    };
+
+    const handleDeleteNewImage = (index) => {
+        const updatedAdditionalImages = [...additionalImages];
+        updatedAdditionalImages.splice(index, 1);
+        setAdditionalImages(updatedAdditionalImages);
+    };
+
+    const handleDeleteImage = (index) => {
+    setImagesToDelete([...imagesToDelete, formData.images[index].filename])
+    // Create a copy of formData.images array
+    const updatedImages = [...formData.images];
+    // Remove the image at the specified index
+    updatedImages.splice(index, 1);
+    // Update the formData state with the modified array
+    setFormData({...formData, images: updatedImages});
+};
+    
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         
@@ -98,6 +125,7 @@ const NewListing = ({ id }) => {
     };
     
     const handleSubmit = async (e) => {
+        console.log('submit')
         e.preventDefault();
         // Validation for mandatory fields
         for (const key in formData) {
@@ -133,7 +161,7 @@ const NewListing = ({ id }) => {
     
             const response = await fetch('http://localhost:5000/api/items', {
                 method: 'POST',
-                body: formDataToSend // Send FormData object
+                body: formDataToSend
             });
     
             const data = await response.json();
@@ -144,22 +172,17 @@ const NewListing = ({ id }) => {
     };
 
     const handleUpdate = async () => {
+        console.log('update')
         try {
             const formDataToSend = new FormData();
     
-            // Append form data
             for (const key in formData) {
                 if (formData.hasOwnProperty(key)) {
-                    if (key === 'images') {
-                        formData[key].forEach((file) => {
-                            formDataToSend.append('images', file); // Append each image file
-                        });
-                    } else if (key === 'details') {
-                        // Initialize details object if it doesn't exist
-                        formData[key] = formData[key] || {};
-                        for (const detailKey in formData[key]) {
-                            if (formData[key].hasOwnProperty(detailKey)) {
-                                formDataToSend.append(`details[${detailKey}]`, formData[key][detailKey]); // Append details object
+                    if (key === 'details') {
+                        const details = formData[key] || {}; // Initialize details object if it doesn't exist
+                        for (const detailKey in details) {
+                            if (details.hasOwnProperty(detailKey)) {
+                                formDataToSend.append(`details[${detailKey}]`, details[detailKey]); // Append details object
                             }
                         }
                     } else {
@@ -168,10 +191,20 @@ const NewListing = ({ id }) => {
                 }
             }
     
-            const url = id ? `http://localhost:5000/api/update/${id}` : 'http://localhost:5000/api/items'; // Update URL based on operation
+            if (additionalImages) {
+                additionalImages.forEach((img) => formDataToSend.append('additionalImages', img));
+            }
+
+            if (imagesToDelete) {
+                imagesToDelete.forEach((str) => formDataToSend.append('imagesToDelete', str));
+            }
+    
+            console.log(formDataToSend);
+    
+            const url = `http://localhost:5000/api/update/${id}`
     
             const response = await fetch(url, {
-                method: 'PUT', // Use PUT for update
+                method: 'PUT',
                 body: formDataToSend
             });
     
@@ -181,6 +214,7 @@ const NewListing = ({ id }) => {
             console.error('Error submitting form:', error);
         }
     };
+    
     
     const handleDelete = async () => {
         try {
@@ -194,8 +228,6 @@ const NewListing = ({ id }) => {
             console.error('Error deleting item:', error);
         }
     };
-    
-
     
     useEffect(() => {
         const fetchItemData = async () => {
@@ -216,28 +248,38 @@ const NewListing = ({ id }) => {
         }
     }, [id]);
 
+    useEffect(() => {
+        console.log(imagesToDelete)
+    }, [imagesToDelete]);
 
     useEffect(() => {
         console.log(formData)
-    }, [formData])
+    }, [formData]);
 
     return (
         <Container id="new-listing-container">
-            <h2>Nauja prekė</h2>
+            { !id && 
+                <h2>Nauja prekė</h2>
+            }
+            { id && 
+                <h2>Atnaujinti prekę</h2>
+            }
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formCategory" className='form-group-crud'>
-                    <Form.Label>Kategorija *</Form.Label>
-                    <Form.Control as="select" name="category" onChange={handleChange} value={formData.category}>
-                        <option value="">Pasirinkite kategoriją</option>
-                        {pathsArray.map((path, index) => (
-                            <option key={index} value={path}>{path}</option>
-                        ))}
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="formFileMultiple" className="mb-3">
-                    <Form.Label>Nuotraukos *</Form.Label>
-                    <Form.Control type="file" multiple name="images" onChange={handleChange} />
-                </Form.Group>
+                        <Form.Label>Kategorija *</Form.Label>
+                        <Form.Control as="select" name="category" onChange={handleChange} value={formData.category}>
+                            <option value="">Pasirinkite kategoriją</option>
+                            {pathsArray.map((path, index) => (
+                                formData.category === path ? <option key={index} value={path} selected>{path}</option>: <option key={index} value={path}>{path}</option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                { !id &&
+                    <Form.Group controlId="formFileMultiple" className="mb-3">
+                        <Form.Label>Nuotraukos *</Form.Label>
+                        <Form.Control type="file" multiple name="images" onChange={handleChange} />
+                    </Form.Group>
+                }
                 <Form.Group controlId="formPrice" className='form-group-crud'>
                     <Form.Label>Kaina *</Form.Label>
                     <Form.Control type="text" placeholder="Įveskite kainą" step="0.1" name="price" onChange={handleChange} value={formData.price} />
@@ -279,8 +321,50 @@ const NewListing = ({ id }) => {
                         <Button variant="secondary" id="delete-button-crud" onClick={handleDelete}>
                             Ištrinti
                         </Button>
+
+                        <div>
+                            <Button variant="primary" onClick={openModal}>Keisti nuotraukas</Button>
+                            <Modal show={showModal} onHide={closeModal}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Keisti nuotraukas</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                        <Row>
+                                            {/* Render existing images */}
+                                            {formData.images.map((image, index) => (
+                                                <Col key={index} sm={4}>
+                                                    <div className="image-container">
+                                                        <img src={`data:${image.type};base64,${image.data}`} alt={`Item ${index}`} style={{ width: '100%' }} />
+                                                        {/* Delete button for each image */}
+                                                        <button className="delete-button" onClick={() => handleDeleteImage(index)}>X</button>
+                                                    </div>
+                                                </Col>
+                                            ))}
+                                            {/* Render newly added images */}
+                                            {additionalImages.map((image, index) => (
+                                                <Col key={index + formData.images.length} sm={4}>
+                                                    <div className="image-container">
+                                                        <img src={URL.createObjectURL(image)} alt={`New Item ${index}`} style={{ width: '100%' }} />
+                                                        {/* Delete button for each new image */}
+                                                        <button className="delete-button" onClick={() => handleDeleteNewImage(index)}>X</button>
+                                                    </div>
+                                                </Col>
+                                            ))}
+                                        </Row>
+                                        <Form.Group controlId="formFileMultiple" className="mb-3">
+                                            <Form.Label>Pridėti nuotraukas</Form.Label>
+                                            <Form.Control type="file" multiple name="images" onChange={(e) => setAdditionalImages([...additionalImages, ...Array.from(e.target.files)])} />
+                                        </Form.Group>
+                                    </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={closeModal}>Uždaryti</Button>
+                                    <Button variant="primary" onClick={handleOk}>OK</Button>
+                                </Modal.Footer>
+                            </Modal>
+                        </div>
+
                         <Button variant="primary" onClick={handleUpdate} id="update-button-crud">
-                            Atanaujinti
+                            Atnaujinti
                         </Button>
                     </div>
                 }

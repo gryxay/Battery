@@ -159,14 +159,17 @@ router.get('/items/:id', async (req, res) => {
     }
 });
 
-    // Update item with a specific ID
-router.put('/update/:id', upload.array('images', 5), async (req, res) => {
+// Update item with a specific ID
+router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) => {
     try {
         // Get item ID from request parameters
         const itemId = req.params.id;
 
         // Find the item in the database
-        const itemToUpdate = await db.Item.findByPk(itemId);
+        const itemToUpdate = await db.Item.findByPk(itemId, {
+            include: [db.Image]
+        });
+
 
         // Check if the item exists
         if (!itemToUpdate) {
@@ -174,7 +177,7 @@ router.put('/update/:id', upload.array('images', 5), async (req, res) => {
         }
 
         // Extract updated item data from request body
-        const { name, category, price, amount, code, details } = req.body;
+        const { name, category, price, amount, code, details, imagesToDelete } = req.body;
 
         // Update the item attributes if provided
         if (name) itemToUpdate.name = name;
@@ -188,27 +191,49 @@ router.put('/update/:id', upload.array('images', 5), async (req, res) => {
 
         // If details are provided, update them
         if (details) {
-            // Find or create details associated with the item
-            let itemDetails = await db.Details.findOne({ where: { itemId: itemId } });
-            if (!itemDetails) {
-                itemDetails = await db.Details.create({
-                    manufacturer: details.manufacturer,
-                    weight: details.weight,
-                    comment: details.comment,
-                    measurements: details.measurements,
-                    packaging: details.packaging,
-                    itemId: itemId // Associate details with the item
-                });
-            } else {
-                // Update existing details
-                if (details.manufacturer) itemDetails.manufacturer = details.manufacturer;
-                if (details.weight) itemDetails.weight = details.weight;
-                if (details.comment) itemDetails.comment = details.comment;
-                if (details.measurements) itemDetails.measurements = details.measurements;
-                if (details.packaging) itemDetails.packaging = details.packaging;
-                await itemDetails.save();
+            // Code to update details
+        }
+
+        // Upload additional images if they exist
+        const createdImages = [];
+        for (const file of req.files) {
+            try {
+                // Store the path of the uploaded image
+                const imagePath = file.filename;
+                
+                // Create image entry in the database with the image path
+                const newImage = await db.Image.create({ location: imagePath, type: file.mimetype });
+                createdImages.push(newImage);
+            } catch (error) {
+                console.error('Error creating image entry:', error);
+                return res.status(500).json({ message: 'Error creating image entry' });
             }
         }
+
+        const allImages = [...itemToUpdate.images, ...createdImages];
+
+        // Associate all images with the item
+        await itemToUpdate.setImages(allImages);
+
+        if (imagesToDelete && imagesToDelete.length > 0) {
+            for (const filename of imagesToDelete) {
+                // Find the image with the matching filename
+                const imageToDelete = itemToUpdate.images.find(image => image.location === filename);
+                if (imageToDelete) {
+                    // Delete the image from the database
+                    await db.Image.destroy({ where: { id: imageToDelete.id } });
+        
+                    // Remove the image file from its location on the disk
+                    const imagePath = path.join(__dirname, '..', 'images', filename);
+                    fs.unlinkSync(imagePath);
+        
+                    // Remove the association between the deleted image and the item
+                    await itemToUpdate.removeImage(imageToDelete);
+                }
+            }
+        }
+        
+
 
         res.status(200).json({ message: 'Item updated successfully' });
     } catch (err) {
@@ -217,7 +242,7 @@ router.put('/update/:id', upload.array('images', 5), async (req, res) => {
     }
 });
 
-    // Delete item with a specific ID
+// Delete item with a specific ID
 router.delete('/delete/:id', async (req, res) => {
     try {
         // Get item ID from request parameters
