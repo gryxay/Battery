@@ -63,10 +63,11 @@ const NewListing = ({ id }) => {
         "kitos-prekes-kitos"
     ];
 
-    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [additionalImages, setAdditionalImages] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([])
+    const navigate = useNavigate();
+    const [category, setCategory] = useState();
 
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
@@ -87,6 +88,12 @@ const NewListing = ({ id }) => {
         }
     });
 
+    useEffect(() => {
+        if (formData.category) {
+            setCategory(formData.category)
+        }
+    }, [formData.category])
+
     const handleOk = () => {
         setFormData({ ...formData, images: [...formData.images] });
         setShowModal(false);
@@ -100,11 +107,8 @@ const NewListing = ({ id }) => {
 
     const handleDeleteImage = (index) => {
     setImagesToDelete([...imagesToDelete, formData.images[index].filename])
-    // Create a copy of formData.images array
     const updatedImages = [...formData.images];
-    // Remove the image at the specified index
     updatedImages.splice(index, 1);
-    // Update the formData state with the modified array
     setFormData({...formData, images: updatedImages});
 };
     
@@ -165,6 +169,7 @@ const NewListing = ({ id }) => {
             });
     
             const data = await response.json();
+            navigate(`/${category}`);
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -205,6 +210,7 @@ const NewListing = ({ id }) => {
             });
     
             const data = await response.json();
+            navigate(`/${category}/${id}`);
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -217,7 +223,7 @@ const NewListing = ({ id }) => {
                 method: 'DELETE'
             });
             const data = await response.json();
-            navigate('/');
+            navigate(`/${category}`);
         } catch (error) {
             console.error('Error deleting item:', error);
         }
@@ -320,7 +326,7 @@ const NewListing = ({ id }) => {
                                             {formData.images.map((image, index) => (
                                                 <Col key={index} sm={4}>
                                                     <div className="image-container">
-                                                        <CloseButton className='delete-image-button-crud' onClick={() => handleDeleteNewImage(index)} />
+                                                        <CloseButton className='delete-image-button-crud' onClick={() => handleDeleteImage(index)} />
                                                         <img src={`data:${image.type};base64,${image.data}`} alt={`Item ${index}`} style={{ width: '100%' }} />
                                                     </div>
                                                 </Col>

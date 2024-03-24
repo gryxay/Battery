@@ -52,16 +52,22 @@
         object-fit: cover;
         margin-right: 1rem;
     }
-}
 
-@media screen and (max-width: 1000px) {
     #listing {
         width: 80vw;
+    }
+
+    #listingDetails {
+        width: 100%;
     }
 }
 
 @media screen and (max-width: 800px) {
     #listing {
+        width: 100%;
+    }
+
+    #cartContainer {
         width: 100%;
     }
 }

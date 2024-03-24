@@ -184,7 +184,7 @@ const Header = () => {
             width < 1000 &&
             <Navbar key={false} expand={false} className="bg-body-tertiary mb-3" data-bs-theme="dark">
                 <Container>
-                    <Navbar.Brand href="#">BATTERY</Navbar.Brand>
+                    <Navbar.Brand href="/">BATTERY</Navbar.Brand>
                     <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-false`} />
                     <div id="mobile-header-container" className="d-inline-flex">
                         <Navbar.Offcanvas

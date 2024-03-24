@@ -194,6 +194,7 @@ router.get('/items/:id', async (req, res) => {
         // Return the item with images and details as JSON response
         res.status(200).json({
             id: item.id,
+            category: item.category,
             name: item.name,
             code: item.code,
             price: item.price,
@@ -231,7 +232,11 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
         }
 
         // Extract updated item data from request body
+        console.log(req.body)
         const { name, category, price, amount, code, details, imagesToDelete } = req.body;
+        console.log('/n/n/n/n')
+        console.log(name)
+        console.log('/n/n/n/n')
 
         // Update the item attributes if provided
         if (name) itemToUpdate.name = name;
@@ -292,10 +297,16 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
         // Associate all images with the item
         await itemToUpdate.setImages(allImages);
 
-        if (imagesToDelete && imagesToDelete.length > 0) {
-            for (const filename of imagesToDelete) {
+        let imagesToDeleteArr = [imagesToDelete].flat();
+        console.log(typeof(imagesToDeleteArr))
+
+        console.log(imagesToDeleteArr)
+
+        
+        if (imagesToDeleteArr && imagesToDeleteArr.length > 0) {
+            for (const filename of imagesToDeleteArr) {
                 // Find the image with the matching filename
-                const imageToDelete = itemToUpdate.images.find(image => image.location === filename);
+                const imageToDelete = itemToUpdate.images.find(image => image.location == filename);
                 if (imageToDelete) {
                     // Delete the image from the database
                     await db.Image.destroy({ where: { id: imageToDelete.id } });

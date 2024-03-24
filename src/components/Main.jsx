@@ -70,6 +70,8 @@ const Main = () => {
                     {data.map((listing, index) => (
                         <Listing
                             key={index}
+                            category={listing.category}
+                            id={listing.id}
                             cart={false}
                             name={listing.name}
                             image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}
@@ -88,6 +90,8 @@ const Main = () => {
                         {data.map((listing, index) => (
                             <ListingAlternate
                                 key={index}
+                                category={listing.category}
+                                id={listing.id}
                                 cart={false}
                                 name={listing.name}
                                 image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}
@@ -109,6 +113,8 @@ const Main = () => {
                         {data.map((listing, index) => (
                             <ListingAlternate
                                 key={index}
+                                category={listing.category}
+                                id={listing.id}
                                 cart={false}
                                 name={listing.name}
                                 image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}
@@ -128,6 +134,8 @@ const Main = () => {
                         {data.map((listing, index) => (
                             <ListingAlternate
                                 key={index}
+                                category={listing.category}
+                                id={listing.id}
                                 cart={false}
                                 name={listing.name}
                                 image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}

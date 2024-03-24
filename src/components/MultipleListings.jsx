@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import ListingAlternate from './ListingAlternate';
+import Listing from './Listing';
 import '../styles/Pagination.css';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import { useParams } from 'react-router-dom';
@@ -42,21 +43,41 @@ const MultipleListings = ({ itemsPerPage }) => {
     return (
         <>
             <div id="multiple-listings-main">
-                <div id="multipleListingContainer">
-                    {currentItems.map((item) => (
-                        <ListingAlternate
-                            key={item.id} // Assuming each item has a unique ID
-                            id={item.id}
-                            category={category}
-                            cart={false}
-                            name={item.name}
-                            image={`data:${item.images[0].type};base64,${item.images[0].data}`} // Use base64 data as image source
-                            price={item.price}
-                            code={item.code}
-                            alt={item.name}
-                        />
-                    ))}
-                </div>
+                { width > 1000 &&
+                    <div id="multipleListingContainer">
+                        {currentItems.map((item) => (
+                            <ListingAlternate
+                                key={item.id} // Assuming each item has a unique ID
+                                id={item.id}
+                                category={category}
+                                cart={false}
+                                name={item.name}
+                                image={`data:${item.images[0].type};base64,${item.images[0].data}`} // Use base64 data as image source
+                                price={item.price}
+                                code={item.code}
+                                alt={item.name}
+                            />
+                        ))}
+                    </div>
+                }
+                { width <= 1000 &&
+                    <div id="multipleListingContainer">
+                        {currentItems.map((item) => (
+                            <Listing
+                                key={item.id} // Assuming each item has a unique ID
+                                id={item.id}
+                                category={category}
+                                cart={false}
+                                name={item.name}
+                                image={`data:${item.images[0].type};base64,${item.images[0].data}`} // Use base64 data as image source
+                                price={item.price}
+                                code={item.code}
+                                alt={item.name}
+                            />
+                        ))}
+                    </div>
+                }
+
                 <ReactPaginate
                     activeClassName={'item active '}
                     breakClassName={'item break-me '}

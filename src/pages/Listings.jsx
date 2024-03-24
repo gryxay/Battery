@@ -25,7 +25,7 @@ const Listings = ({ showFilter, handleFilterClick, handleCloseFilter }) => {
                     <Filter show={showFilter} handleCloseFilter={handleCloseFilter} />
                 }
 
-                <MultipleListings itemsPerPage={20} />
+                <MultipleListings itemsPerPage={5} />
             </div>
             <Footer />
             { width <= 850 &&

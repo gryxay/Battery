@@ -8,6 +8,7 @@
 #listingDetails {
     display: inline-flex;
     flex-direction: column;
+    margin: auto;
     text-align: left;
     padding: 2rem 1rem;
     box-sizing: border-box;
