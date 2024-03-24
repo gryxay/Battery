@@ -245,7 +245,26 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
 
         // If details are provided, update them
         if (details) {
-            // Code to update details
+            // Find or create details associated with the item
+            let itemDetails = await db.Details.findOne({ where: { itemId: itemId } });
+            if (!itemDetails) {
+                itemDetails = await db.Details.create({
+                    manufacturer: details.manufacturer,
+                    weight: details.weight,
+                    comment: details.comment,
+                    measurements: details.measurements,
+                    packaging: details.packaging,
+                    itemId: itemId // Associate details with the item
+                });
+            } else {
+                // Update existing details
+                if (details.manufacturer) itemDetails.manufacturer = details.manufacturer;
+                if (details.weight) itemDetails.weight = details.weight;
+                if (details.comment) itemDetails.comment = details.comment;
+                if (details.measurements) itemDetails.measurements = details.measurements;
+                if (details.packaging) itemDetails.packaging = details.packaging;
+                await itemDetails.save();
+            }
         }
 
         const createdImages = [];
