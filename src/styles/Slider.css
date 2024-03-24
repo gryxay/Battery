@@ -8,8 +8,8 @@
   cursor: pointer;
   position: absolute;
   z-index: 100;
-  background: var(--varta-yellow);
-  border: 5px solid var(--varta-yellow);
+  background: var(--battery-yellow);
+  border: 5px solid var(--battery-yellow);
   border-radius: 100%;
   display: block;
   box-shadow: 0 0 2px 0 rgb(0 0 0 / 44%);
@@ -22,7 +22,7 @@
   background: var(--grey);
 }
 .example-track.example-track-1 {
-  background: var(--varta-yellow);
+  background: var(--battery-yellow);
   opacity: 50%;
 }
 
@@ -40,13 +40,13 @@
 }
 
 .accordion {
-  --bs-accordion-active-bg: var(--varta-yellow);
-  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem var(--varta-yellow);
+  --bs-accordion-active-bg: var(--battery-yellow);
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem var(--battery-yellow);
 }
 
 .form-check-input:checked {
-  background-color: var(--varta-blue);
-  border-color: var(--varta-blue);
+  background-color: var(--battery-blue);
+  border-color: var(--battery-blue);
 }
 
 .form-check-input:focus {

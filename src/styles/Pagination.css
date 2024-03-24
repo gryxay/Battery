@@ -9,20 +9,20 @@
 }
 
 .disabled-page {
-    color: var(--varta-blue);
+    color: var(--battery-blue);
 }
 
 .active {
-    border: solid 1px var(--varta-blue);
+    border: solid 1px var(--battery-blue);
     border-radius: 40px;
-    color: var(--varta-blue);
+    color: var(--battery-blue);
 }
 
 .break-me {
 }
 
 .next {
-    border-left: solid 1px var(--varta-blue);
+    border-left: solid 1px var(--battery-blue);
     font-size: 4px;
     height: 60px;
     position: absolute;
@@ -52,7 +52,7 @@
 }
 
 .previous {
-    border-right: solid 1px var(--varta-blue);
+    border-right: solid 1px var(--battery-blue);
     height: 60px;
     left: 0;
     position: absolute;
@@ -66,7 +66,7 @@
 
 a {
     text-decoration: none;
-    color: var(--varta-blue);
+    color: var(--battery-blue);
 }
 
 @media screen and (max-width: 1550px) {

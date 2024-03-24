@@ -22,8 +22,8 @@
 }
 
 #cartButton {
-    background-color: var(--varta-yellow);
-    border: 2px solid var(--varta-yellow);
+    background-color: var(--battery-yellow);
+    border: 2px solid var(--battery-yellow);
     margin-top: .25rem;
     width: 100%;
 }

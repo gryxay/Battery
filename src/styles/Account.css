@@ -6,7 +6,7 @@
 }
 
 #account-container .nav {
-    background-color: var(--varta-blue);
+    background-color: var(--battery-blue);
 }
 
 #account-container .nav-link {
@@ -19,7 +19,7 @@
 }
 
 #account-container .active {
-    border: solid 1px var(--varta-blue);
+    border: solid 1px var(--battery-blue);
     border-radius: 0;
 }
 

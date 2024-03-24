@@ -10,6 +10,7 @@ import ListingAlternate from './ListingAlternate';
 
 const Main = () => {
     const [images, setImages] = useState(['']);
+    const [data, setData] = useState([])
     const { height, width } = useWindowDimensions();
 
     const responsive = {
@@ -42,6 +43,8 @@ const Main = () => {
                 throw new Error('Failed to fetch images');
             }
             const data = await response.json();
+            console.log(data)
+            setData(data);
             setImages(data[0].images); // Fetch images from first item
         } catch (error) {
             console.error('Error fetching images:', error);
@@ -64,15 +67,15 @@ const Main = () => {
                 { width && width > 1200 &&
                 <div id="new">
                     <h2>Mėnesio Prekės</h2>
-                    {images.map((image, index) => (
+                    {data.map((listing, index) => (
                         <Listing
                             key={index}
                             cart={false}
-                            name={`VARTA akumuliatorius ${index + 1}`}
-                            image={`data:${images[index%2].type};base64,${images[index%2].data}`}
-                            price={'10.99'}
-                            code={'ASD123'}
-                            alt={`Prop ${index + 1}`}
+                            name={listing.name}
+                            image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}
+                            price={listing.price}
+                            code={listing.code}
+                            alt={`Listing ${index + 1}`}
                         />
                     ))}
                 </div>
@@ -82,14 +85,14 @@ const Main = () => {
                 <div id="new">
                     <h2>Mėnesio Prekės</h2>
                     <Carousel responsive={responsive}>
-                        {images.map((image, index) => (
+                        {data.map((listing, index) => (
                             <ListingAlternate
                                 key={index}
                                 cart={false}
-                                name={`VARTA akumuliatorius ${index + 1}`}
-                                image={`data:${images[index%2].type};base64,${images[index%2].data}`}
-                                price={'10.99'}
-                                code={'ASD123'}
+                                name={listing.name}
+                                image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}
+                                price={listing.price}
+                                code={listing.code}
                                 alt={`Prop ${index + 1}`}
                             />
                         ))}
@@ -103,11 +106,18 @@ const Main = () => {
             <div id="popular">
                 <h2>Perkamiausi</h2>
                 <Carousel responsive={responsive}>
-                    <ListingAlternate name={'VARTA akumuliatorius 1'} image={`data:${images[0].type};base64,${images[0].data}`} price={'10.99'} code={'ASD123'} alt={'Prop 1'}/>
-                    <ListingAlternate name={'VARTA akumuliatorius 2'} image={`data:${images[0].type};base64,${images[0].data}`} price={'15.99'} code={'ASD123'} alt={'Prop 2'}/>
-                    <ListingAlternate name={'VARTA akumuliatorius 1'} image={`data:${images[0].type};base64,${images[0].data}`} price={'10.99'} code={'ASD123'} alt={'Prop 1'}/>
-                    <ListingAlternate name={'VARTA akumuliatorius 2'} image={`data:${images[0].type};base64,${images[0].data}`} price={'15.99'} code={'ASD123'} alt={'Prop 2'}/>
-                </Carousel>
+                        {data.map((listing, index) => (
+                            <ListingAlternate
+                                key={index}
+                                cart={false}
+                                name={listing.name}
+                                image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}
+                                price={listing.price}
+                                code={listing.code}
+                                alt={`Prop ${index + 1}`}
+                            />
+                        ))}
+                    </Carousel>
             </div>
 
             <hr style={{ width: "90%", alignSelf: "center", marginTop: "4vh" }}/>
@@ -115,11 +125,18 @@ const Main = () => {
             <div id="popular">
                 <h2>Akumuliatoriai</h2>
                 <Carousel responsive={responsive}>
-                    <ListingAlternate name={'VARTA akumuliatorius 1'} image={`data:${images[0].type};base64,${images[0].data}`} price={'10.99'} code={'ASD123'} alt={'Prop 1'}/>
-                    <ListingAlternate name={'VARTA akumuliatorius 2'} image={`data:${images[0].type};base64,${images[0].data}`} price={'15.99'} code={'ASD123'} alt={'Prop 2'}/>
-                    <ListingAlternate name={'VARTA akumuliatorius 1'} image={`data:${images[0].type};base64,${images[0].data}`} price={'10.99'} code={'ASD123'} alt={'Prop 1'}/>
-                    <ListingAlternate name={'VARTA akumuliatorius 2'} image={`data:${images[0].type};base64,${images[0].data}`} price={'15.99'} code={'ASD123'} alt={'Prop 2'}/>
-                </Carousel>
+                        {data.map((listing, index) => (
+                            <ListingAlternate
+                                key={index}
+                                cart={false}
+                                name={listing.name}
+                                image={`data:${listing.images[0].type};base64,${listing.images[0].data}`}
+                                price={listing.price}
+                                code={listing.code}
+                                alt={`Prop ${index + 1}`}
+                            />
+                        ))}
+                    </Carousel>
             </div>
 
             <hr style={{ width: "90%", alignSelf: "center", marginTop: "4vh" }}/>

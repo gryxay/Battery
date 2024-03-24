@@ -43,7 +43,7 @@
 }
 
 #icons a {
-    color: var(--varta-blue);
+    color: var(--battery-blue);
 }
 
 #mobile-header-container {
@@ -57,7 +57,7 @@ img#logo {
 }
 
 .offcanvas-body, .offcanvas-header {
-    background-color: var(--varta-blue);
+    background-color: var(--battery-blue);
 }
 .btn-close {
     background-color: white !important;
