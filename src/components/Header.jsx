@@ -8,7 +8,6 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useState } from "react";
-import { ReactComponent as Logo} from '../assets/logo.svg';
 
 const Header = () => {
 
@@ -168,7 +167,7 @@ const Header = () => {
             width >= 1000 &&
             <div id="header">
                 <a href="/" style={{ width: '3rem', height: '3rem' }}>
-                    <Logo id="logo" />
+                    <img src={require('../assets/logo.png')} alt="Battery logo" id="logo" />
                 </a>
                 <div id="icons" className="d-flex">
                     <a href="/cart">
