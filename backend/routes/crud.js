@@ -8,7 +8,7 @@ const fs = require('fs');
 // Set up multer storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './images'); // Specify the directory to save the uploaded files
+        cb(null, './images/tmp'); // Save temporary files in /images/tmp
     },
     filename: function (req, file, cb) {
         // Generate a unique filename to avoid overwriting existing files
@@ -18,6 +18,44 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
+
+// Function to move files from source to destination
+function moveFiles(sourceDir, destDir) {
+    fs.readdir(sourceDir, (err, files) => {
+        if (err) throw err;
+
+        files.forEach(file => {
+            const source = path.join(sourceDir, file);
+            const destination = path.join(destDir, file);
+            fs.renameSync(source, destination);
+        });
+    });
+}
+
+// Function to clean up temporary files
+function cleanUpTmpFiles(tmpDir) {
+    fs.readdir(tmpDir, (err, files) => {
+        if (err) throw err;
+
+        files.forEach(file => {
+            const filePath = path.join(tmpDir, file);
+            fs.unlinkSync(filePath);
+        });
+    });
+}
+
+// Function to delete temporary files in a directory
+function deleteTemporaryFiles(directory) {
+    fs.readdir(directory, (err, files) => {
+        if (err) throw err;
+
+        for (const file of files) {
+            fs.unlink(path.join(directory, file), err => {
+                if (err) throw err;
+            });
+        }
+    });
+}
 
 //upload new item
 router.post('/items', upload.array('images', 5), async (req, res) => {
@@ -29,6 +67,9 @@ router.post('/items', upload.array('images', 5), async (req, res) => {
         if (!name || !category || !price || !amount || !req.files || req.files.length === 0) {
             return res.status(400).json({ message: 'Name, category, price, amount, and at least one image are required' });
         }
+
+        // Move files from tmp to uploaded directory
+        moveFiles('./images/tmp', './images/uploaded');
 
         // Create the item
         const newItem = await db.Item.create({
@@ -44,7 +85,7 @@ router.post('/items', upload.array('images', 5), async (req, res) => {
         for (const file of req.files) {
             try {
                 // Store the path of the uploaded image
-                const imagePath = file.filename;
+                const imagePath = path.join('uploaded', file.filename); // Store relative path from /images directory
                 
                 // Create image entry in the database with the image path
                 const newImage = await db.Image.create({ location: imagePath, type: file.mimetype });
@@ -72,6 +113,9 @@ router.post('/items', upload.array('images', 5), async (req, res) => {
             await newItem.setDetail(newDetails);
         }
 
+        // Clean up temporary files in /images/tmp
+        cleanUpTmpFiles('./images/tmp');
+
         res.status(201).json({ message: 'Item created successfully' });
     } catch (err) {
         console.error(err);
@@ -79,18 +123,28 @@ router.post('/items', upload.array('images', 5), async (req, res) => {
     }
 });
 
-//fetch all items
-router.get('/getitems', async (req, res) => {
+//fetch all items or by category
+router.get('/getitems/:category?', async (req, res) => {
     try {
         // Fetch all items from the database
-        const items = await db.Item.findAll({
-            include: [db.Image]
-        });
 
+        let items;
+
+        if (req.params.category) {
+            items = await db.Item.findAll({
+                include: [db.Image],
+                where: {category: req.params.category}
+            });    
+        } else {
+            items = await db.Item.findAll({
+                include: [db.Image],
+            });
+    
+        }
         // Map items to return image paths instead of binary data
         const itemsWithImages = await Promise.all(items.map(async item => {
             const images = await Promise.all(item.images.map(async image => {
-                const imagePath = path.join(__dirname, '..', 'images', image.location);
+                const imagePath = path.join(__dirname, '../images/', '', image.location);
                 const imageBinary = fs.readFileSync(imagePath);
                 return {
                     filename: image.location,
@@ -129,7 +183,7 @@ router.get('/items/:id', async (req, res) => {
 
         // Map the fetched item to return image paths instead of binary data
         const images = await Promise.all(item.images.map(async image => {
-            const imagePath = path.join(__dirname, '..', 'images', image.location);
+            const imagePath = path.join(__dirname, '../images', '', image.location);
             const imageBinary = fs.readFileSync(imagePath);
             return {
                 filename: image.location,
@@ -194,13 +248,17 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
             // Code to update details
         }
 
-        // Upload additional images if they exist
         const createdImages = [];
         for (const file of req.files) {
             try {
                 // Store the path of the uploaded image
-                const imagePath = file.filename;
-                
+                const imagePath = path.join('uploaded', file.filename); // Store relative path from /images directory
+
+                // Move the uploaded image file from temporary directory to permanent directory
+                const source = path.join('./images/tmp', file.filename);
+                const destination = path.join('./images/uploaded', file.filename);
+                fs.renameSync(source, destination);
+
                 // Create image entry in the database with the image path
                 const newImage = await db.Image.create({ location: imagePath, type: file.mimetype });
                 createdImages.push(newImage);
@@ -222,18 +280,16 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
                 if (imageToDelete) {
                     // Delete the image from the database
                     await db.Image.destroy({ where: { id: imageToDelete.id } });
-        
+
                     // Remove the image file from its location on the disk
-                    const imagePath = path.join(__dirname, '..', 'images', filename);
+                    const imagePath = path.join(__dirname, '../images', '', filename);
                     fs.unlinkSync(imagePath);
-        
+
                     // Remove the association between the deleted image and the item
                     await itemToUpdate.removeImage(imageToDelete);
                 }
             }
         }
-        
-
 
         res.status(200).json({ message: 'Item updated successfully' });
     } catch (err) {
@@ -249,11 +305,19 @@ router.delete('/delete/:id', async (req, res) => {
         const itemId = req.params.id;
 
         // Find the item in the database
-        const itemToDelete = await db.Item.findByPk(itemId);
+        const itemToDelete = await db.Item.findByPk(itemId, {
+            include: [db.Image],
+        });
 
         // Check if the item exists
         if (!itemToDelete) {
             return res.status(404).json({ message: 'Item not found' });
+        }
+
+        // Delete associated images and their files
+        for (const image of itemToDelete.images) {
+            const imagePath = path.join(__dirname, '../images', '', image.location);
+            fs.unlinkSync(imagePath); // Delete the file from the disk
         }
 
         // Delete associated images

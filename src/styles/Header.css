@@ -51,6 +51,11 @@
     margin-right: 1rem;
 }
 
+#logo {
+    width: 18rem;
+    height: auto;
+}
+
 .offcanvas-body, .offcanvas-header {
     background-color: var(--varta-blue);
 }

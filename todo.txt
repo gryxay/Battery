@@ -1,0 +1,10 @@
+TO-DO:
+
+Filters
+Sorting
+Remove pakavimas
+
+Cart page
+
+Get items
+Get images

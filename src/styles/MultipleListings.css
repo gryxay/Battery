@@ -38,6 +38,10 @@
     text-align: left;
 }
 
+.accordion-body {
+    text-align: left;
+}
+
 @media screen and (min-width: 1101px) {
     #filters {
         width: 15vw;

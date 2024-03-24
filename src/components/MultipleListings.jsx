@@ -19,12 +19,11 @@ const MultipleListings = ({ itemsPerPage }) => {
     
     const fetchItems = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/getitems');
+            const response = await fetch(`http://localhost:5000/api/getitems/${category}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch items');
             }
             const data = await response.json();
-            console.log(data)
             setItems(data); // Update the items state with the fetched data
         } catch (error) {
             console.error('Error fetching items:', error);

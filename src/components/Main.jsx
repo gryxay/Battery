@@ -42,7 +42,6 @@ const Main = () => {
                 throw new Error('Failed to fetch images');
             }
             const data = await response.json();
-            console.log(data)
             setImages(data[0].images); // Fetch images from first item
         } catch (error) {
             console.error('Error fetching images:', error);

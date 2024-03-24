@@ -8,6 +8,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useState } from "react";
+import { ReactComponent as Logo} from '../assets/logo.svg';
 
 const Header = () => {
 
@@ -166,8 +167,8 @@ const Header = () => {
         {
             width >= 1000 &&
             <div id="header">
-                <a href="/" style={{ width: '20%' }}>
-                    <img src={require('../assets/logo.png')} alt="Varta logo" id="logo" />
+                <a href="/" style={{ width: '3rem', height: '3rem' }}>
+                    <Logo id="logo" />
                 </a>
                 <div id="icons" className="d-flex">
                     <a href="/cart">
@@ -184,7 +185,7 @@ const Header = () => {
             width < 1000 &&
             <Navbar key={false} expand={false} className="bg-body-tertiary mb-3" data-bs-theme="dark">
                 <Container>
-                    <Navbar.Brand href="#">VARTA</Navbar.Brand>
+                    <Navbar.Brand href="#">BATTERY</Navbar.Brand>
                     <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-false`} />
                     <div id="mobile-header-container" className="d-inline-flex">
                         <Navbar.Offcanvas
@@ -194,7 +195,7 @@ const Header = () => {
                         >
                             <Offcanvas.Header closeButton>
                             <Offcanvas.Title id={`offcanvas`} style={{ color: 'white'}}>
-                                VARTA
+                                BATTERY
                             </Offcanvas.Title>
                             </Offcanvas.Header>
                             <Offcanvas.Body>

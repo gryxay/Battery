@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Modal, Row, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
+import CloseButton from 'react-bootstrap/CloseButton';
 
 const NewListing = ({ id }) => {
     const pathsArray = [
@@ -125,7 +126,6 @@ const NewListing = ({ id }) => {
     };
     
     const handleSubmit = async (e) => {
-        console.log('submit')
         e.preventDefault();
         // Validation for mandatory fields
         for (const key in formData) {
@@ -165,14 +165,12 @@ const NewListing = ({ id }) => {
             });
     
             const data = await response.json();
-            console.log('Response:', data);
         } catch (error) {
             console.error('Error submitting form:', error);
         }
     };
 
     const handleUpdate = async () => {
-        console.log('update')
         try {
             const formDataToSend = new FormData();
     
@@ -199,8 +197,6 @@ const NewListing = ({ id }) => {
                 imagesToDelete.forEach((str) => formDataToSend.append('imagesToDelete', str));
             }
     
-            console.log(formDataToSend);
-    
             const url = `http://localhost:5000/api/update/${id}`
     
             const response = await fetch(url, {
@@ -209,7 +205,6 @@ const NewListing = ({ id }) => {
             });
     
             const data = await response.json();
-            console.log('Response:', data);
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -222,7 +217,6 @@ const NewListing = ({ id }) => {
                 method: 'DELETE'
             });
             const data = await response.json();
-            console.log('Response:', data);
             navigate('/');
         } catch (error) {
             console.error('Error deleting item:', error);
@@ -247,14 +241,6 @@ const NewListing = ({ id }) => {
             fetchItemData();
         }
     }, [id]);
-
-    useEffect(() => {
-        console.log(imagesToDelete)
-    }, [imagesToDelete]);
-
-    useEffect(() => {
-        console.log(formData)
-    }, [formData]);
 
     return (
         <Container id="new-listing-container">
@@ -282,7 +268,7 @@ const NewListing = ({ id }) => {
                 }
                 <Form.Group controlId="formPrice" className='form-group-crud'>
                     <Form.Label>Kaina *</Form.Label>
-                    <Form.Control type="text" placeholder="Įveskite kainą" step="0.1" name="price" onChange={handleChange} value={formData.price} />
+                    <Form.Control type="number" placeholder="Įveskite kainą" step="0.01" min={0} name="price" onChange={handleChange} value={formData.price} />
                 </Form.Group>
                 <Form.Group controlId="formName" className='form-group-crud'>
                     <Form.Label>Pavadinimas *</Form.Label>
@@ -334,9 +320,8 @@ const NewListing = ({ id }) => {
                                             {formData.images.map((image, index) => (
                                                 <Col key={index} sm={4}>
                                                     <div className="image-container">
+                                                        <CloseButton className='delete-image-button-crud' onClick={() => handleDeleteNewImage(index)} />
                                                         <img src={`data:${image.type};base64,${image.data}`} alt={`Item ${index}`} style={{ width: '100%' }} />
-                                                        {/* Delete button for each image */}
-                                                        <button className="delete-button" onClick={() => handleDeleteImage(index)}>X</button>
                                                     </div>
                                                 </Col>
                                             ))}
@@ -344,9 +329,8 @@ const NewListing = ({ id }) => {
                                             {additionalImages.map((image, index) => (
                                                 <Col key={index + formData.images.length} sm={4}>
                                                     <div className="image-container">
+                                                        <CloseButton onClick={() => handleDeleteNewImage(index)} />
                                                         <img src={URL.createObjectURL(image)} alt={`New Item ${index}`} style={{ width: '100%' }} />
-                                                        {/* Delete button for each new image */}
-                                                        <button className="delete-button" onClick={() => handleDeleteNewImage(index)}>X</button>
                                                     </div>
                                                 </Col>
                                             ))}

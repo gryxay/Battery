@@ -1,11 +1,14 @@
+import AccountBody from "../components/AccountBody";
 import Header from "../components/Header";
-import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import '../styles/Account.css';
 
 const Account = () => {
     return (
         <>
             <Header />
-            <Navbar />
+            <AccountBody />
+            <Footer />
         </>
     )
 }

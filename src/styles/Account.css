@@ -1,0 +1,83 @@
+#account-container {
+    width: 100%;
+    height: fit-content;
+    margin: auto;
+    min-height: 81.5vh;
+}
+
+#account-container .nav {
+    background-color: var(--varta-blue);
+}
+
+#account-container .nav-link {
+    color: var(--grey) !important;
+}
+
+#account-container .nav-link.active {
+    color: white !important;
+    background-color: var(--dark-blue);
+}
+
+#account-container .active {
+    border: solid 1px var(--varta-blue);
+    border-radius: 0;
+}
+
+#account-container .nav-tabs .nav-link {
+    margin-bottom: 0;
+}
+
+#submit-btn-form {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.tab-container {
+    display: flex;
+    width: 80%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    gap: 1rem;
+}
+
+.tab-container form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-around;
+}
+
+.tab-container button {
+    display: block;
+}
+
+.tab-container .mb-3 {
+    width: 40%;
+    display: inline-block;
+}
+
+.tab-content {
+    width: 80%;
+    margin: auto;
+}
+
+.tab-pane {
+    border: none !important;
+}
+
+@media screen and (max-width: 1000px) {
+    .tab-container .mb-3 {
+        width: 60%;
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .tab-container .mb-3 {
+        width: 95%;
+        display: inline-block;
+    }
+}

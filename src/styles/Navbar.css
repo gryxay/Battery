@@ -20,7 +20,7 @@
 }
 
 .dropdown-menu[data-bs-popper] {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
 
 #dropdown-inner {
