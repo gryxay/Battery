@@ -79,7 +79,7 @@ const Main = () => {
                             code={listing.code}
                             alt={`Listing ${index + 1}`}
                         />
-                    ))}
+                    )).splice(3)}
                 </div>
                 }
 

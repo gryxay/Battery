@@ -63,13 +63,16 @@
     }
 
     .carousel {
-        width: 55vw;
-        height: auto;
+        width: 75vw;
+        height: 70vh;
         display: inline-flex;
     }
     
     .carousel img {
-        height: 50vh;
         object-fit: cover;
+    }
+
+    div.carousel.slide {
+        width: 75vw !important;
     }
 }
