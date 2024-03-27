@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Modal, Row, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import CloseButton from 'react-bootstrap/CloseButton';
+import Toast from 'react-bootstrap/Toast';
 
 const NewListing = ({ id }) => {
     const pathsArray = [
@@ -64,13 +65,28 @@ const NewListing = ({ id }) => {
     ];
 
     const [showModal, setShowModal] = useState(false);
+    const [showManufacturerModal, setShowManufacturerModal] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [additionalImages, setAdditionalImages] = useState([]);
     const [imagesToDelete, setImagesToDelete] = useState([])
     const navigate = useNavigate();
     const [category, setCategory] = useState();
+    const [manufacturers, setManufacturers] = useState([]);
+    const [showToast, setShowToast] = useState(false);
+    const [toastText, setToastText] = useState('');
+    const [deleteText, setDeleteText] = useState('')
+    const [confirmationSource, setConfirmationSource] = useState('')
 
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
+
+    const openManufacturerModal = () => setShowManufacturerModal(true);
+    const closeManufacturerModal = () => setShowManufacturerModal(false);
+
+    const openConfirmationModal = () => setShowConfirmationModal(true);
+    const closeConfirmationModal = () => setShowConfirmationModal(false);
+  
+    const toggleShowToast = () => setShowToast(!showToast);
 
     const [formData, setFormData] = useState({
         category: '',
@@ -94,6 +110,41 @@ const NewListing = ({ id }) => {
         }
     }, [formData.category])
 
+    useEffect(() => {
+        const fetchProducers = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/manufacturers');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch items');
+                }
+                const items = await response.json();
+                setManufacturers(items.manufacturers)
+            } catch (error) {
+                console.error('Error fetching items:', error.message);
+            }
+        }
+
+        fetchProducers();
+    }, [])
+
+    const handleManufacturerOk = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/manufacturers`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.manufacturers.includes(formData.details.manufacturer)) {
+                setToastText('Gamintojas jau egzistuoja');
+                setShowToast();
+            } else {
+                setManufacturers([...manufacturers, formData.details.manufacturer])
+                closeManufacturerModal();
+            }
+        } catch (error) {
+            console.error('Error adding manufacturer', error);
+        }
+    }
+
     const handleOk = () => {
         setFormData({ ...formData, images: [...formData.images] });
         setShowModal(false);
@@ -106,7 +157,7 @@ const NewListing = ({ id }) => {
     };
 
     const handleDeleteImage = (index) => {
-    setImagesToDelete([...imagesToDelete, formData.images[index].filename])
+    setImagesToDelete([...imagesToDelete, formData.images[index]])
     const updatedImages = [...formData.images];
     updatedImages.splice(index, 1);
     setFormData({...formData, images: updatedImages});
@@ -157,6 +208,8 @@ const NewListing = ({ id }) => {
                                 formDataToSend.append(`details[${detailKey}]`, formData[key][detailKey]); // Append details object
                             }
                         }
+                    } else if (key === 'price') {
+                        formDataToSend.append('price', parseFloat(formData['price']));
                     } else {
                         formDataToSend.append(key, formData[key]); // Append other form data
                     }
@@ -199,7 +252,7 @@ const NewListing = ({ id }) => {
             }
 
             if (imagesToDelete) {
-                imagesToDelete.forEach((str) => formDataToSend.append('imagesToDelete', str));
+                imagesToDelete.forEach((img) => formDataToSend.append('imagesToDelete', img.filename));
             }
     
             const url = `http://localhost:5000/api/update/${id}`
@@ -248,6 +301,67 @@ const NewListing = ({ id }) => {
         }
     }, [id]);
 
+    const confirmationModal =
+    <>
+        <Modal show={showConfirmationModal} onHide={closeConfirmationModal} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>{deleteText}</Modal.Title>
+            </Modal.Header>
+            <Modal.Footer className='justify-content-between'>
+                <Button variant="secondary" onClick={() => {
+                    closeConfirmationModal();
+                    if (confirmationSource === 'image') {
+                        formData.images = [...formData.images, ...imagesToDelete];
+                        openModal();
+                    }
+                }}>Atšaukti</Button>
+                    <Button variant="primary" onClick={() => {
+                        if (confirmationSource === 'listing') {
+                            handleDelete()
+                        }
+                        closeConfirmationModal();
+                    }}>Taip, noriu trinti</Button>
+            </Modal.Footer>
+
+        </Modal>
+    </>
+
+    const manufacturerModal = 
+    <>
+        {/* Manufacturer modal */}
+        <div>
+        <Button variant="primary" onClick={openManufacturerModal}>
+            Pridėti gamintoją
+        </Button> 
+        <Modal show={showManufacturerModal} onHide={closeManufacturerModal}>
+            <Modal.Header closeButton>
+                <Modal.Title>Pridėti naują gamintoją</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form.Group controlId="formManufacturer" className='form-group-crud'>
+                        <Form.Label>Gamintojas</Form.Label>
+                        <Form.Control type="text" placeholder="Įveskite gamintoją" name="manufacturer" maxLength={100} onChange={handleChange} value={formData.details.manufacturer} />
+                    </Form.Group>
+                </Modal.Body>
+                <Toast show={showToast} bg={'danger'} postion={'top-start'} delay={2000} autohide onClose={toggleShowToast}>
+                    <Toast.Header>
+                        <img
+                        src="holder.js/20x20?text=%20"
+                        className="rounded me-2"
+                        alt=""
+                        />
+                        <strong className="me-auto">{toastText}</strong>
+                    </Toast.Header>
+                </Toast>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={closeManufacturerModal}>Uždaryti</Button>
+                <Button variant="primary" onClick={handleManufacturerOk}>OK</Button>
+            </Modal.Footer>
+
+        </Modal>
+    </div>
+    </>
+
     return (
         <Container id="new-listing-container">
             { !id && 
@@ -260,9 +374,9 @@ const NewListing = ({ id }) => {
                 <Form.Group controlId="formCategory" className='form-group-crud'>
                         <Form.Label>Kategorija *</Form.Label>
                         <Form.Control as="select" name="category" onChange={handleChange} value={formData.category}>
-                            <option value="">Pasirinkite kategoriją</option>
+                            <option value={formData.category}>Pasirinkite kategoriją</option>
                             {pathsArray.map((path, index) => (
-                                formData.category === path ? <option key={index} value={path} selected>{path}</option>: <option key={index} value={path}>{path}</option>
+                                <option key={index} value={path}>{path}</option>
                             ))}
                         </Form.Control>
                     </Form.Group>
@@ -289,9 +403,14 @@ const NewListing = ({ id }) => {
                     <Form.Control type="number" placeholder="Įveskite kiekį" name="amount" min={1} onChange={handleChange} value={formData.amount} />
                 </Form.Group>
                 <Form.Group controlId="formManufacturer" className='form-group-crud'>
-                    <Form.Label>Gamintojas *</Form.Label>
-                    <Form.Control type="text" placeholder="Įveskite gamintoją" name="manufacturer" maxLength={100} onChange={handleChange} value={formData.details.manufacturer} />
-                </Form.Group>
+                        <Form.Label>Gamintojas *</Form.Label>
+                        <Form.Control as="select" name="manufacturer" onChange={handleChange} value={formData.manufacturer}>
+                            <option value={formData.manufacturer}>Pasirinkite gamintoją</option>
+                            {manufacturers.length > 0 && manufacturers.map((manufacturer, index) => (
+                                <option key={index} value={manufacturer}>{manufacturer}</option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
                 <Form.Group controlId="formMeasurements" className='form-group-crud'>
                     <Form.Label>Išmatavimai</Form.Label>
                     <Form.Control type="text" placeholder="Įveskite išmatavimus" name="measurements" maxLength={60} onChange={handleChange} value={formData.details.measurements} />
@@ -310,10 +429,19 @@ const NewListing = ({ id }) => {
                 </Form.Group>
                 { id &&
                     <div id="update-buttons">
-                        <Button variant="secondary" id="delete-button-crud" onClick={handleDelete}>
+                        <Button variant="secondary" id="delete-button-crud" onClick={() => {
+                            setConfirmationSource('listing');
+                            setDeleteText('Ar tikrai norite ištrinti prekę?');
+                            openConfirmationModal();;
+                        }}>
                             Ištrinti
                         </Button>
 
+                        {confirmationModal}
+
+                        {manufacturerModal}
+                        
+                        {/* Image modal */}
                         <div>
                             <Button variant="primary" onClick={openModal}>Keisti nuotraukas</Button>
                             <Modal show={showModal} onHide={closeModal}>
@@ -323,7 +451,14 @@ const NewListing = ({ id }) => {
                                 <Modal.Body>
                                         <Row>
                                             {/* Render existing images */}
-                                            {formData.images.map((image, index) => (
+                                            {formData.images.length === 1 && formData.images.map((image, index) => (
+                                                <Col key={index} sm={4}>
+                                                    <div className="image-container">
+                                                        <img src={`data:${image.type};base64,${image.data}`} alt={`Item ${index}`} style={{ width: '100%' }} />
+                                                    </div>
+                                                </Col>
+                                            ))}
+                                            {formData.images.length > 1 && formData.images.map((image, index) => (
                                                 <Col key={index} sm={4}>
                                                     <div className="image-container">
                                                         <CloseButton className='delete-image-button-crud' onClick={() => handleDeleteImage(index)} />
@@ -335,7 +470,7 @@ const NewListing = ({ id }) => {
                                             {additionalImages.map((image, index) => (
                                                 <Col key={index + formData.images.length} sm={4}>
                                                     <div className="image-container">
-                                                        <CloseButton onClick={() => handleDeleteNewImage(index)} />
+                                                        <CloseButton className='delete-image-button-crud' onClick={() => handleDeleteNewImage(index)} />
                                                         <img src={URL.createObjectURL(image)} alt={`New Item ${index}`} style={{ width: '100%' }} />
                                                     </div>
                                                 </Col>
@@ -348,7 +483,19 @@ const NewListing = ({ id }) => {
                                     </Modal.Body>
                                 <Modal.Footer>
                                     <Button variant="secondary" onClick={closeModal}>Uždaryti</Button>
-                                    <Button variant="primary" onClick={handleOk}>OK</Button>
+                                    <Button variant="primary" onClick={() => {
+                                            if (imagesToDelete.length > 0) {
+                                                closeModal();
+                                                setConfirmationSource('image');
+                                                setDeleteText('Ar tikrai norite ištrinti pasirinktas nuotraukas?');
+                                                openConfirmationModal();
+                                            } else {
+                                                handleOk();
+                                            }}
+                                        }
+                                    >
+                                        OK
+                                    </Button>
                                 </Modal.Footer>
                             </Modal>
                         </div>
@@ -359,9 +506,13 @@ const NewListing = ({ id }) => {
                     </div>
                 }
                 { !id &&
-                    <Button variant="primary" type="submit" id="submit-button-crud">
-                        Pateikti
-                    </Button>
+                    <div id="update-buttons">
+                        {manufacturerModal}
+
+                        <Button variant="primary" type="submit">
+                            Pateikti
+                        </Button>
+                    </div>
                 }
             </Form>
         </Container>

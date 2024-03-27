@@ -8,11 +8,6 @@
     box-sizing: border-box;
 }
 
-#submit-button-crud {
-    margin-top: 1rem;
-    justify-self: center;
-}
-
 #new-listing-container h2 {
     margin: 1rem auto 1.75rem auto;
 }
@@ -21,6 +16,11 @@
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
+}
+
+
+.toast {
+    margin: 1rem auto 0 auto;
 }
 
 .form-group-crud {

@@ -15,8 +15,14 @@
 }
 
 #listingContainerAlt {
+    width: 80%;
+    text-align: center;
     display: inline-flex;
     flex-direction: column;
+    box-sizing: border-box;
+    padding: 1rem 0;
+    text-wrap: wrap;
+    overflow-wrap: break-word;
 }
 
 #listingContainerAlt h6 {

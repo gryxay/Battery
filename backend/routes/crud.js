@@ -1,9 +1,12 @@
+const { validateNewItem, validateCategory, validateId, validateImages } = require('../middleware/middleware');
 const express = require('express');
+const sequelize = require('../database/db');
 const router = express.Router();
 const db = require('../models/index');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { validationResult } = require('express-validator');
 
 // Set up multer storage
 const storage = multer.diskStorage({
@@ -58,8 +61,12 @@ function deleteTemporaryFiles(directory) {
 }
 
 //upload new item
-router.post('/items', upload.array('images', 5), async (req, res) => {
+router.post('/items', upload.array('images', 5), validateNewItem, async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+        }
         // Get form data from req.body
         const { name, category, price, amount, code, details } = req.body;
 
@@ -119,15 +126,13 @@ router.post('/items', upload.array('images', 5), async (req, res) => {
         res.status(201).json({ message: 'Item created successfully' });
     } catch (err) {
         console.error(err);
-        res.status(500).json('Server Error');
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 
 //fetch all items or by category
-router.get('/getitems/:category?', async (req, res) => {
+router.get('/getitems/:category?', validateCategory, async (req, res) => {
     try {
-        // Fetch all items from the database
-
         let items;
 
         if (req.params.category) {
@@ -158,15 +163,14 @@ router.get('/getitems/:category?', async (req, res) => {
         }));
 
         res.status(200).json(itemsWithImages); // Send items with images as JSON response
-    } catch (error) {
-        console.error('Error retrieving items:', error);
-        res.status(500).json({ message: 'Server Error' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 
-
 //fetch item by id
-router.get('/items/:id', async (req, res) => {
+router.get('/items/:id/', validateId, async (req, res) => {
     try {
         // Fetch the item with the specified ID from the database
         const itemId = req.params.id;
@@ -208,14 +212,34 @@ router.get('/items/:id', async (req, res) => {
             },
             images: images
         });
-    } catch (error) {
-        console.error('Error retrieving item:', error);
-        res.status(500).json({ message: 'Server Error' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
+
+//fetch all manufacturers
+router.get('/manufacturers', async (req, res) => {
+    try {
+
+        const manufacturers = await db.Details.findAll({
+            attributes: ['manufacturer']
+        });
+        // Extract producers from the result
+        let uniqueManufacturers = manufacturers.values()
+        uniqueManufacturers = [...new Set(uniqueManufacturers)]
+
+        uniqueManufacturers = uniqueManufacturers.map((manufacturer => manufacturer.manufacturer))
+
+        res.status(200).json({ manufacturers: uniqueManufacturers });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 
 // Update item with a specific ID
-router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) => {
+router.put('/update/:id', upload.array('additionalImages', 5), validateId, validateImages, async (req, res) => {
     try {
         // Get item ID from request parameters
         const itemId = req.params.id;
@@ -232,11 +256,7 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
         }
 
         // Extract updated item data from request body
-        console.log(req.body)
         const { name, category, price, amount, code, details, imagesToDelete } = req.body;
-        console.log('/n/n/n/n')
-        console.log(name)
-        console.log('/n/n/n/n')
 
         // Update the item attributes if provided
         if (name) itemToUpdate.name = name;
@@ -298,11 +318,6 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
         await itemToUpdate.setImages(allImages);
 
         let imagesToDeleteArr = [imagesToDelete].flat();
-        console.log(typeof(imagesToDeleteArr))
-
-        console.log(imagesToDeleteArr)
-
-        
         if (imagesToDeleteArr && imagesToDeleteArr.length > 0) {
             for (const filename of imagesToDeleteArr) {
                 // Find the image with the matching filename
@@ -324,12 +339,12 @@ router.put('/update/:id', upload.array('additionalImages', 5), async (req, res) 
         res.status(200).json({ message: 'Item updated successfully' });
     } catch (err) {
         console.error(err);
-        res.status(500).json('Server Error');
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 
 // Delete item with a specific ID
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', validateId, async (req, res) => {
     try {
         // Get item ID from request parameters
         const itemId = req.params.id;
@@ -362,7 +377,7 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(200).json({ message: 'Item deleted successfully' });
     } catch (err) {
         console.error(err);
-        res.status(500).json('Server Error');
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 

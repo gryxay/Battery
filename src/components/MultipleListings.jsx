@@ -45,7 +45,7 @@ const MultipleListings = ({ itemsPerPage }) => {
             <div id="multiple-listings-main">
                 { width > 1000 &&
                     <div id="multipleListingContainer">
-                        {currentItems.map((item) => (
+                        {currentItems.length > 0 && currentItems.map((item) => (
                             <ListingAlternate
                                 key={item.id} // Assuming each item has a unique ID
                                 id={item.id}
@@ -58,11 +58,16 @@ const MultipleListings = ({ itemsPerPage }) => {
                                 alt={item.name}
                             />
                         ))}
+                        {currentItems.length === 0 && 
+                            <div className='empty-category'>
+                                <h3 id="empty-category-h3">Prekių šioje kategorijoje nėra</h3>
+                            </div>
+                        }
                     </div>
                 }
                 { width <= 1000 &&
                     <div id="multipleListingContainer">
-                        {currentItems.map((item) => (
+                        {currentItems.length > 0 && currentItems.map((item) => (
                             <Listing
                                 key={item.id} // Assuming each item has a unique ID
                                 id={item.id}
@@ -75,6 +80,11 @@ const MultipleListings = ({ itemsPerPage }) => {
                                 alt={item.name}
                             />
                         ))}
+                        {currentItems.length === 0 && 
+                            <div className='empty-category'>
+                                <h3 id="empty-category-h3">Prekių šioje kategorijoje nėra</h3>
+                            </div>
+                        }
                     </div>
                 }
 

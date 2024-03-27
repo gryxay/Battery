@@ -13,6 +13,8 @@
     padding: 2rem 1rem;
     box-sizing: border-box;
     width: 40%;
+    text-wrap: wrap;
+    overflow-wrap: break-word;
 }
 
 #loading { 

@@ -28,6 +28,10 @@
     color: var(--dark-grey)
 }
 
+#empty-category-h3 {
+    color: var(--dark-grey) !important;
+}
+
 .filterCategory hr {
     width: 100%;
     margin: 1rem auto;
@@ -40,6 +44,12 @@
 
 .accordion-body {
     text-align: left;
+}
+
+.empty-category {
+    width: 100%;
+    padding-top: 2rem;
+    border: 2px solid var(--light-grey);
 }
 
 @media screen and (min-width: 1101px) {
